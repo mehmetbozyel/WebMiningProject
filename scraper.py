@@ -5,15 +5,16 @@ import pandas as pd
 import numpy as np
 import urllib3
 
+
 http = urllib3.PoolManager()
 
 url = "https://www.arabam.com/ikinci-el/otomobil?city="
 #url = "https://www.sahibinden.com/otomobil/adana?"
 links = []
 for j in range(86):   #86 idi
-    for i in range(50):  #50 idi
+    for i in range(5):  #50 idi
         print(i)
-        url1 = url+str(j+1)+"&take=50&page="+str(i+1) 
+        url1 = url+str(j+1)+"&take=20&page="+str(i+1) 
         #url1 = url+"&pagingSize=50&pagingOffset="+str(i*50)
         print("url1= " + url1)
 
@@ -107,20 +108,32 @@ new["Motor_gücü"] = new[9].str.replace('Motor Gücü: ', '')
 #new['Motor_hacmi'] = [str(x)[:5] for x in new['Motor_hacmi']]
 #new["Motor_gücü"] = new["Motor_gücü"].str.replace("hp", "")
 new["Kilometre"] = new[10].str.replace('Kilometre: ', '')
-#new["Kilometre"] = new["Kilometre"].str.replace("km", "")
+new["Kilometre"] = new["Kilometre"].str.replace('.', '', regex=True)
+new["Kilometre"] = new["Kilometre"].str.replace("km", "")
 #new["Kilometre"] = new["Kilometre"].str.replace(",", ".")
 new["Boya-değişen"] = new[11].str.replace('Boya-değişen: ', '')
 new["Konum"]=loc[0]
 #print(df["Fiyat"])
-#new["Fiyat"] = df["Fiyat"].str.replace(".", "")
-new["Fiyat"] = df["Fiyat"]
+new["Fiyat"] = df["Fiyat"].str.replace(".", "",regex=True)
 new["Fiyat"] = new["Fiyat"].str.replace("TL", "")
+new["Fiyat"] = new["Fiyat"].str.replace(" ", "")
 #new["Kilometre"] = new["Kilometre"].str.replace('.', '')
-new["Kilometre"] = new["Kilometre"]
+
 new.drop(columns=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14], axis=1, inplace=True)
 #new
-print(new["Seri"].get(1))
+print(new["Konum"].get(1))
 new.to_csv('cities.csv')
 
+"""
 #df = pd.read_csv('cities.csv')
-#print(df)
+city_list = new["Konum"].unique()
+marka_list = new["Marka"].unique()
+seri_list = new["Seri"].unique()
+
+cond = new['Konum']=="Ankara" and new['Marka']=="Ford" and new['Seri']=="Focus"
+
+mean_of_car = new[cond]
+
+out = pd.to_numeric(mean_of_car['Fiyat'], errors='coerce').mean()
+print(out)
+"""
