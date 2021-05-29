@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
 import pandas as pd
-import numpy as np
+
 import urllib3
 
 
