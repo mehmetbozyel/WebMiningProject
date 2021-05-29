@@ -10,8 +10,8 @@ http = urllib3.PoolManager()
 url = "https://www.arabam.com/ikinci-el/otomobil?city="
 #url = "https://www.sahibinden.com/otomobil/adana?"
 links = []
-for j in range(1):   #86 idi
-    for i in range(1):  #50 idi
+for j in range(86):   #86 idi
+    for i in range(50):  #50 idi
         print(i)
         url1 = url+str(j+1)+"&take=50&page="+str(i+1) 
         #url1 = url+"&pagingSize=50&pagingOffset="+str(i*50)
@@ -79,4 +79,48 @@ for i, value in enumerate(link):
 
 df = pd.DataFrame(list(zip(fiyat, konum, ozellik)), 
                columns =['Fiyat', 'Konum','Ozellik']) 
-print(df.get())
+
+
+df = df[df.Ozellik != 'None'].reset_index()
+loc = df["Konum"].str.split("/", n = 1, expand = True)
+df.drop(columns=["Konum"], inplace=True)
+
+loc.drop(columns=[1],inplace=True)
+
+#new = df["Ozellik"].str.split(":", n = 14, expand = True)
+new = df["Ozellik"].str.split("    ", n = 14, expand = True)
+
+new["Ilan_no"] = new[0].str.replace(' İlan No: ', '')
+
+new["Ilan_tarihi"] = new[1].str.replace('İlan Tarihi: ', '')
+new["Marka"] = new[2].str.replace('Marka: ', '')
+new["Seri"] = new[3].str.replace('Seri: ', '')
+new["Model"] = new[4].str.replace('Model: ', '')
+new["Yıl"] = new[5].str.replace('Yıl: ', '')
+#new['Yıl'] = [str(x)[:5] for x in new['Yıl']]
+new["Yakıt_tipi"] = new[6].str.replace('Yakıt Tipi: ', '')
+new["Vites_tipi"] = new[7].str.replace('Vites Tipi: ', '')
+new["Motor_hacmi"] = new[8].str.replace('Motor Hacmi: ', '')
+#new["Motor_hacmi"] = new["Motor_hacmi"].str.replace("cc", "")
+new["Motor_gücü"] = new[9].str.replace('Motor Gücü: ', '')
+#new['Motor_gücü'] = [str(x)[:3] for x in new['Motor_gücü']] 
+#new['Motor_hacmi'] = [str(x)[:5] for x in new['Motor_hacmi']]
+#new["Motor_gücü"] = new["Motor_gücü"].str.replace("hp", "")
+new["Kilometre"] = new[10].str.replace('Kilometre: ', '')
+#new["Kilometre"] = new["Kilometre"].str.replace("km", "")
+#new["Kilometre"] = new["Kilometre"].str.replace(",", ".")
+new["Boya-değişen"] = new[11].str.replace('Boya-değişen: ', '')
+new["Konum"]=loc[0]
+#print(df["Fiyat"])
+#new["Fiyat"] = df["Fiyat"].str.replace(".", "")
+new["Fiyat"] = df["Fiyat"]
+new["Fiyat"] = new["Fiyat"].str.replace("TL", "")
+#new["Kilometre"] = new["Kilometre"].str.replace('.', '')
+new["Kilometre"] = new["Kilometre"]
+new.drop(columns=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14], axis=1, inplace=True)
+#new
+print(new["Seri"].get(1))
+new.to_csv('cities.csv')
+
+#df = pd.read_csv('cities.csv')
+#print(df)
