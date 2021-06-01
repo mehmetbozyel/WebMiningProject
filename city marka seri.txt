@@ -1,0 +1,17 @@
+city marka seri 
+{city:{marka:{seri:}}}
+
+is_2002 =  gapminder['city']=="Ankara" and gapminder['marka']=="BMW" and gapminder['seri']=="2002"
+gapminder_2002 = gapminder[is_2002]
+gapminder_2002["Fiyat"].mean
+
+gapminder['continent'].unique()
+
+
+
+I got this to work:
+
+>>> import locale
+>>> locale.setlocale(locale.LC_ALL, 'en_US')
+
+locale.format("%d", 1255000, grouping=True)

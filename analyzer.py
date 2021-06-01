@@ -14,7 +14,7 @@ for i in marka_list:
     markalar[i] = markalar_df
 
 
-last = pd.DataFrame(columns =['City', 'Marka','Seri','Average Price']) 
+last = pd.DataFrame(columns =['City', 'Marka','Seri','Average Price(TL)']) 
 for city in city_list:
     for marka in markalar.keys():
         for seri in markalar[marka]:
